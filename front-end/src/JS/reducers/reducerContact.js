@@ -1,7 +1,14 @@
-import { GET_CONTACTS } from "../constants/actionsTypes";
+import {
+  GET_CONTACT,
+  GET_CONTACTS,
+  TOGGLE_FALSE,
+  TOGGLE_TRUE,
+} from "../constants/actionsTypes";
 
 const intialState = {
   contacts: [],
+  contactId: {},
+  isEdit: false,
 };
 
 const reducerContact = (state = intialState, action) => {
@@ -9,9 +16,18 @@ const reducerContact = (state = intialState, action) => {
     case GET_CONTACTS:
       return { ...state, contacts: action.payload };
 
+    case GET_CONTACT:
+      return { ...state, contactId: action.payload[0] };
+
+    case TOGGLE_TRUE:
+      return { ...state, isEdit: true };
+
+    case TOGGLE_FALSE:
+      return { ...state, isEdit: false };
+
     default:
       return state;
   }
 };
 
-export default reducerContact
+export default reducerContact;

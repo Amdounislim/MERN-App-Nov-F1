@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Form, Button } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { addContact } from "../JS/actions/actionContact";
-import {Link} from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux";
+import { addContact, editContact } from "../JS/actions/actionContact";
+import { Link } from "react-router-dom";
 
 const AddContact = () => {
   const [newContact, setNewContact] = useState({
@@ -12,6 +12,16 @@ const AddContact = () => {
   });
 
   const dispatch = useDispatch();
+  const contactId = useSelector((state) => state.contactId);
+  const isEdit = useSelector((state) => state.isEdit);
+
+  useEffect(() => {
+    if (isEdit) {
+      setNewContact(contactId);
+    } else {
+      setNewContact({ name: "", email: "", phone: "" });
+    }
+  }, [contactId, isEdit]);
 
   const handleChange = (e) => {
     setNewContact({ ...newContact, [e.target.name]: e.target.value });
@@ -40,7 +50,7 @@ const AddContact = () => {
             color: "white",
           }}
         >
-          Add New Contact
+          {isEdit ? "Edit Contact" : "Add New Contact"}
         </Card.Header>
 
         <Card.Body>
@@ -56,6 +66,7 @@ const AddContact = () => {
                   name="name"
                   placeholder="Enter your name"
                   onChange={handleChange}
+                  value={newContact.name}
                 />
               </Form.Group>
 
@@ -69,6 +80,7 @@ const AddContact = () => {
                   name="email"
                   placeholder="Enter your email"
                   onChange={handleChange}
+                  value={newContact.email}
                 />
               </Form.Group>
 
@@ -82,18 +94,23 @@ const AddContact = () => {
                   name="phone"
                   placeholder="Enter your phone"
                   onChange={handleChange}
+                  value={newContact.phone}
                 />
               </Form.Group>
             </Form>
           </Card.Text>
         </Card.Body>
         <div className="buttons">
-          <Link to='/Contact_list'>
+          <Link to="/Contact_list">
             <Button
               variant="outline-primary edit-button"
-              onClick={() => dispatch(addContact(newContact))}
+              onClick={() => {
+                isEdit
+                  ? dispatch(editContact(newContact._id, newContact))
+                  : dispatch(addContact(newContact));
+              }}
             >
-              Add
+              {isEdit ? "Save" : "Add"}
             </Button>
           </Link>
           <Button variant="outline-danger edit-button">Cancel</Button>

@@ -3,7 +3,7 @@ import "./App.css";
 import { BrowserRouter, Link, Route, Switch } from "react-router-dom";
 import { Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { getContacts } from "./JS/actions/actionContact";
+import { getContacts, toggleFalse } from "./JS/actions/actionContact";
 import ContactCard from "./components/ContactCard";
 import AddContact from "./components/AddContact";
 
@@ -25,10 +25,18 @@ function App() {
           <Button variant="outline-primary button">Contact List</Button>
         </Link>
         <Link to="/Add_Contact">
-          <Button variant="primary button">Add Contact</Button>
+          <Button
+            variant="primary button"
+            onClick={() => dispatch(toggleFalse())}
+          >
+            Add Contact
+          </Button>
         </Link>
         <Switch>
-          <Route path="/Add_Contact" render={() => <AddContact />} />
+          <Route
+            path="/(Add_Contact|Edit_Contact)/"
+            render={() => <AddContact />}
+          />
           <Route
             path="/Contact_list"
             render={() => (
